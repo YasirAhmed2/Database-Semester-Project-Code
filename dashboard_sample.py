@@ -33,7 +33,9 @@ def execute_query(query, params=None, fetch=False):
                     data = cursor.fetchall()
                     return pd.DataFrame(data, columns=columns) if data else pd.DataFrame()
                 else:
-                    return cursor.fetchone()
+                    # For RETURNING clauses or single row fetches
+                    result = cursor.fetchone()
+                    return result if result else None
             conn.commit()
     except psycopg2.Error as e:
         st.error(f"Database error: {e}")
@@ -65,15 +67,15 @@ def manage_airports():
             city = st.text_input("City")
             country = st.text_input("Country")
             code = st.text_input("Code").upper()
-            
-            if st.form_submit_button("Create"):
-                if not all([name, city, country, code]):
-                    st.error("All fields are required!")
-                else:
-                    query = "INSERT INTO airports (name, city, country, code) VALUES (%s, %s, %s, %s) RETURNING airport_id"
-                    result = execute_query(query, (name, city, country, code), fetch=True)
-                    if result is not None:
-                        st.success(f"Airport created with ID: {result.iloc[0][0]}")
+        
+        if st.form_submit_button("Create"):
+            if not all([name, city, country, code]):
+                st.error("All fields are required!")
+            else:
+                query = "INSERT INTO airports (name, city, country, code) VALUES (%s, %s, %s, %s) RETURNING airport_id"
+                result = execute_query(query, (name, city, country, code), fetch=True)
+                if result is not None:
+                    st.success(f"Airport created with ID: {result[0]}")  # Access tuple directly
     
     elif operation == "Read":
         query = "SELECT * FROM airports"
