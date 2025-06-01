@@ -111,31 +111,3 @@ CREATE TABLE notifications (
     message TEXT,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-ALTER TABLE passengers ALTER COLUMN nationality TYPE VARCHAR(50);
-
-ALTER TABLE airports ADD COLUMN icao_code VARCHAR(4);
-ALTER TABLE airports ADD CONSTRAINT unique_icao UNIQUE (icao_code);
-
-ALTER TABLE terminals ADD COLUMN terminal_name VARCHAR(100);
-ALTER TABLE terminals ADD CONSTRAINT unique_terminal_code_per_airport 
-    UNIQUE (airport_id, terminal_code);
--- Add to flights table
-ALTER TABLE flights ADD COLUMN airline_code VARCHAR(3);
-ALTER TABLE flights ADD COLUMN recurring_schedule VARCHAR(100); -- e.g., "Daily", "Mon,Wed,Fri"
-
--- Enhance flight_schedules
-ALTER TABLE flight_schedules ADD COLUMN actual_departure TIMESTAMP;
-ALTER TABLE flight_schedules ADD COLUMN actual_arrival TIMESTAMP;
-ALTER TABLE flight_schedules ADD COLUMN delay_reason TEXT;
-
-ALTER TABLE passengers 
-    ADD COLUMN date_of_birth DATE,
-    ADD COLUMN gender VARCHAR(10),
-    ADD COLUMN frequent_flyer_number VARCHAR(20),
-    ADD COLUMN is_verified BOOLEAN DEFAULT FALSE;
-
-CREATE INDEX idx_flights_origin ON flights(origin_airport_id);
-CREATE INDEX idx_flights_destination ON flights(destination_airport_id);
-CREATE INDEX idx_schedules_flight ON flight_schedules(flight_id);
-CREATE INDEX idx_bookings_passenger ON bookings(passenger_id);
-CREATE INDEX idx_bookings_schedule ON bookings(schedule_id);

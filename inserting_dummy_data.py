@@ -24,7 +24,7 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 
 # Set the number of records you want (adjust as needed)
-NUM_RECORDS = 100000  # For 100k records, adjust based on your system capabilities
+NUM_RECORDS = 100000  # For 100k records, adjust based on our system capabilities
 
 def create_dummy_data():
     print("Starting dummy data generation...")
