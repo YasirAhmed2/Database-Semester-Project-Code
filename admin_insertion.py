@@ -11,7 +11,7 @@ conn = psycopg2.connect(
     port="6677"
 )
 cursor = conn.cursor()
-admin_roles = ['Admin','Passenger','Pilot','Airline Staff','Security Officer']
+admin_roles = ['Super Admin','Flight Manager','Gates Manager']
 # for role in admin_roles:
 #     cursor.execute("INSERT INTO admin_roles (role_name) VALUES (%s)", (role,))
 #     conn.commit()

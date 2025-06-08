@@ -1,65 +1,55 @@
+# auth/auth_utils.py
+
 import bcrypt
 import psycopg2
 
-# ---------------------------
-# PASSWORD HASHING UTILITIES
-# ---------------------------
-
 def hash_password(password: str) -> str:
-    """Hash a password for storing."""
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     return hashed.decode('utf-8')
 
-
 def check_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a stored password against one provided by user."""
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
-# ---------------------------
-# ROLE & USER UTILS
-# ---------------------------
+# Role name to ID mapping
+ROLE_MAP = {
+    "Admin": 1,
+    "Pilot": 2,
+    "Security Officer": 3,
+    "Customer": 4,
+    "Airline Staff": 5
+}
 
-def get_user_by_email(conn, email: str):
-    """
-    Check if user exists in admins or passengers and return relevant data.
-    """
+def get_user_by_email_and_role(conn, email: str, role: str):
+    role_id = ROLE_MAP.get(role)
+
+    if role_id is None:
+        return None
+
     cur = conn.cursor()
 
-    # Try Admins first
-    cur.execute("""
-        SELECT admin_id, full_name, email, password, role_id
-        FROM admins
-        WHERE email = %s
-    """, (email,))
-    admin = cur.fetchone()
+    try:
+        # All roles are stored in 'admins' table with different role_id
+        cur.execute("""
+            SELECT admin_id, full_name, email, password, role_id
+            FROM admins
+            WHERE email = %s AND role_id = %s
+        """, (email, role_id))
 
-    if admin:
-        cur.execute("SELECT role_name FROM admin_roles WHERE role_id = %s", (admin[4],))
-        role_name = cur.fetchone()[0] if cur.rowcount > 0 else "Admin"
+        result = cur.fetchone()
+        if result:
+            user = {
+                'user_id': result[0],
+                'name': result[1],
+                'email': result[2],
+                'hashed_password': result[3],
+                'role': role
+            }
+            return user
 
-        return {
-            'user_id': admin[0],
-            'name': admin[1],
-            'email': admin[2],
-            'hashed_password': admin[3],
-            'role': role_name
-        }
+    except Exception as e:
+        print("Error in get_user_by_email_and_role:", e)
+        return None
+    finally:
+        cur.close()
 
-    # If not admin, check Passengers
-    cur.execute("""
-        SELECT passenger_id, full_name, email, passport_number
-        FROM passengers
-        WHERE email = %s
-    """, (email,))
-    passenger = cur.fetchone()
-
-    if passenger:
-        return {
-            'user_id': passenger[0],
-            'name': passenger[1],
-            'email': passenger[2],
-            'hashed_password': passenger[3],  # You may store passport number as fallback
-            'role': 'Passenger'
-        }
-
-    return None  # No user found
+    return None
