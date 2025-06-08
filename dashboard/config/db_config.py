@@ -1,26 +1,20 @@
+# config/db_config.py
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import streamlit as st
 
-# ---------------------------------------
-# DB CONFIGURATION
-# ---------------------------------------
-
-def get_db_connection():
-    """
-    Establish and return a PostgreSQL connection.
-    Update your credentials as needed.
-    """
-    try:
+def get_connection():
+    if 'db_conn' not in st.session_state:
         conn = psycopg2.connect(
             host="localhost",
             database="AirportFlightManagement",
             user="yasir",
             password="yasir1234",
-            port="6677",
-            cursor_factory=RealDictCursor  # Optional: fetch results as dicts
+            port=6677
         )
-        return conn
-    except Exception as e:
-        st.error(f"Database connection failed: {e}")
-        return None
+        st.session_state['db_conn'] = conn
+    return st.session_state['db_conn']
+
+def get_cursor():
+    conn = get_connection()
+    return conn.cursor(cursor_factory=RealDictCursor)
