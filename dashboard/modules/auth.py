@@ -18,7 +18,7 @@ def validate_login(email, plain_password, role_id):
     Authenticate user by email, hashed password, and role_id.
     Works for admin (1), pilot (2), airline staff (3), and security officer (4).
     """
-    ALLOWED_ROLE_IDS = {1, 2, 3, 4}
+    ALLOWED_ROLE_IDS = {1, 2, 3}
 
     if role_id not in ALLOWED_ROLE_IDS:
         return None

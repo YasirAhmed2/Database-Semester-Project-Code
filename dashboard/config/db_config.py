@@ -16,5 +16,11 @@ def get_connection():
     return st.session_state['db_conn']
 
 def get_cursor():
+    """Returns just the cursor (for backward compatibility)"""
     conn = get_connection()
     return conn.cursor(cursor_factory=RealDictCursor)
+
+def get_cursor_and_connection():
+    """Returns both cursor and connection"""
+    conn = get_connection()
+    return conn.cursor(cursor_factory=RealDictCursor), conn

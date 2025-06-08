@@ -1,8 +1,6 @@
 # modules/dashboards.py
 import streamlit as st
-from modules.admin_dashboard import admin_dashboard
-from modules.security_officer import security_officer_dashboard
-from modules.pilot_dashboard import pilot_dashboard
+from modules.super_admin import dashboard
 def load_dashboard(user):
     role_id = user['role_id']
     
@@ -13,17 +11,14 @@ def load_dashboard(user):
 
     # Here you will add role-specific dashboards, e.g.:
     if role_id == 1:  # SuperAdmin (example)
-        st.write("Admin Dashboard")
-        admin_dashboard()
+        st.write("Super Admin")
+        dashboard()
         # call functions to show admin dashboard
     elif role_id == 2:  # Manager
-        st.write("Pilot Dashboard")
-        pilot_dashboard(user)
+        st.write("Flight Manager")
+        # pilot_dashboard(user)
     elif role_id == 3:  # Staff
-        st.write("Airline staff Dashboard")
-    elif role_id == 4:  # Passenger (if role exists)
-        st.write("Security Officer Dashboard")
-        security_officer_dashboard(user)
+        st.write("Gates Manager")
 
     else:
         st.write("Role dashboard not implemented yet.")
