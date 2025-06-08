@@ -1,5 +1,5 @@
 import streamlit as st
-from auth.login import login_user
+from auth.login import login_screen
 from crud import airports, passengers, bookings, flights, admins
 from config.db_config import init_connection
 
@@ -22,7 +22,7 @@ if not st.session_state.logged_in:
     st.title("🔐 Airline Management System")
     st.subheader("Please log in to continue")
 
-    success = login_user(conn)
+    success = login_screen(conn)
     if not success:
         st.stop()
 
