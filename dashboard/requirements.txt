@@ -1,0 +1,17 @@
+# Core
+streamlit==1.35.0
+
+# PostgreSQL database connection
+psycopg2-binary==2.9.9
+
+# For secure password hashing
+bcrypt==4.1.2
+
+# Optional: UI enhancements (markdown, icons)
+streamlit-option-menu==0.3.6
+
+# Data manipulation (if needed)
+pandas==2.2.2
+
+# Optional: for using time formats, etc.
+python-dateutil==2.9.0.post0
