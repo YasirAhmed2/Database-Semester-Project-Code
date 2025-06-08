@@ -1,6 +1,6 @@
 import streamlit as st
 import psycopg2
-from db_config import get_db_connection
+from config.db_config import get_db_connection
 
 # -----------------------------------
 # CRUD functions for flights table
