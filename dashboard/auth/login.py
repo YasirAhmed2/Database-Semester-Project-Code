@@ -1,22 +1,35 @@
 import streamlit as st
 import psycopg2
-from auth_utils import get_user_by_email, check_password
+from auth.auth_utils import get_user_by_email, check_password
 
-# -------------- #
-# DB CONNECTION  #
-# -------------- #
 def connect_db():
     return psycopg2.connect(
         host="localhost",
         database="AirportFlightManagement",
         user="yasir",
         password="yasir1234",
-        port="6677"  # adjust if necessary
+        port="6677"
     )
 
-# ---------------------------- #
-# STREAMLIT LOGIN UI & LOGIC  #
-# ---------------------------- #
+def authenticate_user(email: str, password: str):
+    if not email or not password:
+        return None
+    
+    conn = None
+    try:
+        conn = connect_db()
+        user = get_user_by_email(conn, email)
+        if user and check_password(password, user['hashed_password']):
+            return user
+        else:
+            return None
+    except Exception as e:
+        st.error(f"Error authenticating user: {e}")
+        return None
+    finally:
+        if conn:
+            conn.close()
+
 def login_screen():
     st.title("✈️ Airport Management Login")
 
@@ -26,19 +39,12 @@ def login_screen():
     if st.button("Login"):
         if not email or not password:
             st.warning("Please enter both email and password.")
-            return
-
-        conn = connect_db()
-        user = get_user_by_email(conn, email)
-
-        if user and check_password(password, user['hashed_password']):
-            st.success(f"Welcome, {user['name']}! Logged in as {user['role']}")
-
-            # Set session state
-            st.session_state.logged_in = True
-            st.session_state.user_id = user['user_id']
-            st.session_state.name = user['name']
-            st.session_state.email = user['email']
-            st.session_state.role = user['role']
+            return None
+        
+        user = authenticate_user(email, password)
+        if user:
+            st.success(f"Welcome, {user['full_name']}! You are logged in as {user['role']}.")
+            return user
         else:
             st.error("Invalid email or password.")
+            return None

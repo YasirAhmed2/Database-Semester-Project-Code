@@ -1,75 +1,65 @@
 import streamlit as st
-from auth.login import login_screen
-from crud import airports, passengers, bookings, flights, admins
-from config.db_config import init_connection
+# from auth.login import login_screen # Your login function returning user dict or None
+from utils.ui_components import show_header, show_error, show_success, button
+from auth.login import authenticate_user
 
-# Initialize DB connection
-conn = init_connection()
+# Import role-based UI modules (you would implement these separately)
+from crud import admins
+from crud import passengers
+# from crud import pilots
+# from crud import airline_staff
+# from crud import security_officers
 
-# Set page config
-st.set_page_config(page_title="✈️ Airline Management", layout="wide")
+def main():
+    st.set_page_config(page_title="Airport Management System", page_icon="✈️", layout="centered")
 
-# Initialize session state
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
-if 'role' not in st.session_state:
-    st.session_state.role = None
-if 'admin_id' not in st.session_state:
-    st.session_state.admin_id = None
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+        st.session_state.user = None
 
-# Login
-if not st.session_state.logged_in:
-    st.title("🔐 Airline Management System")
-    st.subheader("Please log in to continue")
+    if not st.session_state.logged_in:
+        show_login()
+    else:
+        show_dashboard()
 
-    success = login_screen(conn)
-    if not success:
-        st.stop()
+def show_login():
+    show_header("Airport Management System Login", icon="🔐")
 
-# Sidebar Navigation
-st.sidebar.title("📋 Menu")
+    email = st.text_input("Email")
+    password = st.text_input("Password", type="password")
 
-role = st.session_state.role
+    if st.button("Login"):
+        user = authenticate_user(email, password)
+        if user:
+            st.session_state.logged_in = True
+            st.session_state.user = user
+            show_success(f"Welcome {user['full_name']}! You are logged in as {user['role']}.")
+            st.experimental_rerun()
+        else:
+            show_error("Invalid credentials. Please try again.")
 
-if role == "SuperAdmin":
-    menu = st.sidebar.radio("Select Panel", ["Airports", "Flights", "Passengers", "Bookings", "Admins"])
-    if menu == "Airports":
-        airports.render_airports_ui(conn)
-    elif menu == "Flights":
-        flights.render_flights_ui(conn)
-    elif menu == "Passengers":
-        passengers.render_passengers_ui(conn)
-    elif menu == "Bookings":
-        bookings.render_bookings_ui(conn)
-    elif menu == "Admins":
-        admins.render_admins_ui(conn)
+def show_dashboard():
+    user = st.session_state.user
+    role = user.get("role")
 
-elif role == "Manager" or role == "Airline Staff":
-    menu = st.sidebar.radio("Select Panel", ["Flights", "Passengers", "Bookings"])
-    if menu == "Flights":
-        flights.render_flights_ui(conn)
-    elif menu == "Passengers":
-        passengers.render_passengers_ui(conn)
-    elif menu == "Bookings":
-        bookings.render_bookings_ui(conn)
+    st.sidebar.write(f"👤 Logged in as: {user.get('full_name')} ({role})")
+    if button("Logout"):
+        st.session_state.logged_in = False
+        st.session_state.user = None
+        st.experimental_rerun()
 
-elif role == "Security Officer":
-    menu = st.sidebar.radio("Select Panel", ["Passenger Details", "Flight Info"])
-    if menu == "Passenger Details":
-        passengers.render_passengers_ui(conn, read_only=True)
-    elif menu == "Flight Info":
-        flights.render_flights_ui(conn, read_only=True)
+    if role == "admin":
+        admins.show_admin_dashboard()
+    elif role == "passenger":
+        passengers.show_passenger_dashboard()
+    elif role == "pilot":
+        pilots.show_pilot_dashboard()
+    elif role == "airline_staff":
+        airline_staff.show_airline_staff_dashboard()
+    elif role == "security_officer":
+        security_officers.show_security_officer_dashboard()
+    else:
+        st.error("Role not recognized. Contact administrator.")
 
-elif role == "Pilot":
-    st.subheader("🧑‍✈️ Pilot Dashboard")
-    flights.render_flights_ui(conn, pilot_view=True)
-
-elif role == "Passenger":
-    menu = st.sidebar.radio("Select Panel", ["My Bookings", "Flight Schedules"])
-    if menu == "My Bookings":
-        bookings.render_passenger_bookings_ui(conn)
-    elif menu == "Flight Schedules":
-        flights.render_passenger_schedule_ui(conn)
-
-else:
-    st.warning("❌ Unknown role. Please contact administrator.")
+if __name__ == "__main__":
+    main()
