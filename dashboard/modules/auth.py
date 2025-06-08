@@ -2,7 +2,7 @@
 import bcrypt
 from config.db_config import get_cursor
 
-ALLOWED_ROLE_IDS = {1, 3, 4, 5}  # admin=1, pilot=3, airline staff=4, security officer=5
+ALLOWED_ROLE_IDS = {1, 2, 3, 4}  # admin=1, pilot=3, airline staff=4, security officer=5
 
 def get_roles():
     cursor = get_cursor()
