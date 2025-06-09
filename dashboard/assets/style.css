@@ -1,12 +1,9 @@
-/* Blurred and animated airplane background */
 body {
-    background-image: url("airplane-bg.jpg");
+    background-image: url("https://images.unsplash.com/photo-1532777981421-04f18256f1df");
     background-size: cover;
     background-position: center;
     animation: slideBackground 30s linear infinite;
-    filter: blur(5px);
     height: 100vh;
-    margin: 0;
     overflow: hidden;
 }
 
@@ -15,17 +12,26 @@ body {
     100% { background-position: 100% 0; }
 }
 
-/* Login card centered with blur behind */
+/* Blurred background layer */
+.blurred-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(8px);
+    z-index: -1;
+}
+
+/* Login box styling */
 .login-box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255,255,255,0.2);
-    border-radius: 10px;
+    margin: auto;
+    width: 100%;
+    max-width: 400px;
     padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.3);
     color: white;
-    text-align: center;
 }
