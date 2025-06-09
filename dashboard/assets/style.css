@@ -1,0 +1,31 @@
+/* Blurred and animated airplane background */
+body {
+    background-image: url("airplane-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    animation: slideBackground 30s linear infinite;
+    filter: blur(5px);
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+@keyframes slideBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 0; }
+}
+
+/* Login card centered with blur behind */
+.login-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    color: white;
+    text-align: center;
+}
