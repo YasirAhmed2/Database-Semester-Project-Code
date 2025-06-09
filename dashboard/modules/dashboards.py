@@ -17,7 +17,7 @@ def load_dashboard(user):
         # call functions to show admin dashboard
     elif role_id == 2:  # Manager
         st.write("Flight Manager")
-        flight_manager_dashboard
+        flight_manager_dashboard()
         # pilot_dashboard(user)
 
     else:

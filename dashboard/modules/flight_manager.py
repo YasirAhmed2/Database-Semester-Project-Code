@@ -1,6 +1,7 @@
 import re
 import pandas as pd
 import streamlit as st
+st.set_page_config(layout="wide")
 from sqlalchemy import text
 from modules.utils import (
     export_to_excel, 
@@ -10,9 +11,10 @@ from modules.utils import (
 )
 
 session = get_session()
-
-st.set_page_config(layout="wide")
 st.title("🛫 Flight Manager Dashboard")
+
+
+
 
 def get_primary_key_column(session, table_name):
     if not re.match(r'^\w+$', table_name):
