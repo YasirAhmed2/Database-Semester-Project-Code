@@ -1,6 +1,7 @@
 # modules/dashboards.py
 import streamlit as st
 from modules.super_admin import dashboard
+from modules.flight_manager import flight_manager_dashboard
 def load_dashboard(user):
     role_id = user['role_id']
     
@@ -16,9 +17,8 @@ def load_dashboard(user):
         # call functions to show admin dashboard
     elif role_id == 2:  # Manager
         st.write("Flight Manager")
+        flight_manager_dashboard()
         # pilot_dashboard(user)
-    elif role_id == 3:  # Staff
-        st.write("Gates Manager")
 
     else:
         st.write("Role dashboard not implemented yet.")

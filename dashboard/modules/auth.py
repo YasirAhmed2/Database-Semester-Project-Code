@@ -2,7 +2,7 @@
 import bcrypt
 from config.db_config import get_cursor
 
-ALLOWED_ROLE_IDS = {1, 2, 3, 4}  # admin=1, pilot=3, airline staff=4, security officer=5
+ALLOWED_ROLE_IDS = {1, 2}  # admin=1, pilot=3, airline staff=4, security officer=5
 
 def get_roles():
     cursor = get_cursor()
@@ -18,7 +18,7 @@ def validate_login(email, plain_password, role_id):
     Authenticate user by email, hashed password, and role_id.
     Works for admin (1), pilot (2), airline staff (3), and security officer (4).
     """
-    ALLOWED_ROLE_IDS = {1, 2, 3}
+    ALLOWED_ROLE_IDS = {1, 2}
 
     if role_id not in ALLOWED_ROLE_IDS:
         return None
