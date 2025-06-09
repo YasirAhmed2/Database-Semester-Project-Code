@@ -11,7 +11,7 @@ from modules.utils import (
 )
 
 session = get_session()
-st.title("🛫 Flight Manager Dashboard")
+
 
 
 

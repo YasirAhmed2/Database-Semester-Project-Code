@@ -1,5 +1,5 @@
 body {
-    background-image: url("https://images.unsplash.com/photo-1532777981421-04f18256f1df");
+    background-image: url("/assets/airplane-bg.png");
     background-size: cover;
     background-position: center;
     animation: slideBackground 30s linear infinite;
@@ -24,7 +24,7 @@ body {
 }
 
 /* Login box styling */
-.login-box {
+/* .login-box {
     margin: auto;
     width: 100%;
     max-width: 400px;
@@ -34,4 +34,4 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0,0,0,0.3);
     color: white;
-}
+} */

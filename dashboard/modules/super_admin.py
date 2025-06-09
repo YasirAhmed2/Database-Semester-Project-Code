@@ -16,7 +16,12 @@ session = get_session()
 
             
 st.set_page_config(layout="wide")
-st.title("🛫 Airport Flight Management")
+st.markdown(
+    """
+    <h1 style='text-align: center; color: #0000;'>Super Admin Login</h1>
+    """,
+    unsafe_allow_html=True
+)
 
 # Session 
 from sqlalchemy import text
