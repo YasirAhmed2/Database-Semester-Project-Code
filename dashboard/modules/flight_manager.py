@@ -43,8 +43,7 @@ def fast_filter(df, search_term):
 def flight_manager_dashboard():
     st.sidebar.title("📋 Flight Manager Menu")
 
-    tables = [
-         "flights", "flight_schedules","gates"]
+    tables = [  "flights", "flight_schedules","gates"]
     table = st.sidebar.selectbox("Select Table", tables)
 
     # View & Filter
@@ -66,20 +65,25 @@ def flight_manager_dashboard():
     new_data = {col: st.text_input(f"{col}") for col in cols if col != 'id'}
 
     if st.button("Insert"):
-        columns = ", ".join(new_data.keys())
-        values = ", ".join([f"'{v}'" for v in new_data.values()])
-        query = text(f"INSERT INTO {table} ({columns}) VALUES ({values}) RETURNING *")
-        result = session.execute(query)
-        session.commit()
-        inserted_id = result.fetchone()[0]
-        log_action(session, table, "INSERT", inserted_id, st.session_state.user['admin_id'])
-        st.success("Inserted Successfully")
+        try:
+            columns = ", ".join(new_data.keys())
+            values = ", ".join([f"'{v}'" for v in new_data.values()])
+            query = text(f"INSERT INTO {table} ({columns}) VALUES ({values}) RETURNING *")
+            result = session.execute(query)
+            session.commit()
+            inserted_id = result.fetchone()[0]
+            log_action(session, table, "INSERT", inserted_id, st.session_state.user['admin_id'])
+            st.success("✅ Inserted Successfully")
+        except Exception as e:
+            session.rollback()  # 👈 This is crucial
+            st.error(f"❌ Insert failed: {e}")
 
 
 
 
-   
-    
+
+
+
         # Update
     # Update
     st.subheader("✏️ Update Record")
