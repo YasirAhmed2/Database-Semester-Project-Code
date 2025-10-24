@@ -1,5 +1,5 @@
 
-# ✈️ Airport Flight Management System 
+# Airport Flight Management System 
 
 > “Data is a precious thing and will last longer than the systems themselves.” – Tim Berners-Lee  
 
