@@ -17,23 +17,7 @@ This project focuses on **PostgreSQL database design** for flight, passenger, an
 ![Status](https://img.shields.io/badge/Status-Active-success)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
----
 
-## 📘 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [System Architecture](#system-architecture)
-- [Database Design](#database-design)
-- [Project Structure](#project-structure)
-- [Setup Instructions](#setup-instructions)
-- [How to Run](#how-to-run)
-- [Future Enhancements](#future-enhancements)
-- [Author](#author)
-- [License](#license)
-
----
 
 ## 🧠 Overview
 
